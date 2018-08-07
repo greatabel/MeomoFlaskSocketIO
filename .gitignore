@@ -1,0 +1,11 @@
+__pycache__/
+.DS_Store
+.idea/*
+geckodriver.log
+ghostdriver.log
+*.pyc
+\@@@*
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+AbelDemo/luminagic/SNGenerator/sns/*
+
