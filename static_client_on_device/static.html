@@ -1,0 +1,116 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Flask_Chat_App</title>
+</head>
+<body>
+<link href="bootstrap.min.4.1.1.css" rel="stylesheet">
+<style>
+.hideDiv
+{
+    display:none;
+}
+</style>
+    <div>用户名字：<span id="myname"></span>&nbsp;| pageid=[<span id="pageid">pageid</span> ]</div>
+    <button class="btn btn-primary" id="patient">
+      我是戴设备的矫正用户
+    </button>
+    <button class="btn btn-warning" id="doctor">
+      我是帮助使用的医生
+    </button>
+
+    <div id="show_eara" class='hideDiv'>
+      <h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
+      <div class="message_holder"></div>
+
+      <form action="" method="POST">
+        <input type="text" class="username" placeholder="role_id"/>
+        <input type="text" class="message" placeholder="操作"/>
+        <input type="submit" value="通知"/>
+      </form>
+  </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery.min1.12.4.js"></script>
+    <script src="js/socket.io.min1.7.3.js"></script>
+
+    <script type="text/javascript">
+      var user_role = ''
+      var myname = ''
+      var pageid = Math.floor((Math.random()*10000) + 1)
+      $('#pageid').text(pageid)
+
+      var socket = io.connect('http://127.0.0.1:5000');
+      //  luminagic_socket_random 和 hardcode_roomid 将来应该app进入房间前通过认证后获取分配的
+      var luminagic_socket_random = 'f174b966fxx29y'
+
+      var hardcode_roomid = '1#2R4_'
+
+      socket.on( 'connect', function() {
+        socket.emit( 'my_event_' + luminagic_socket_random, {
+          data: 'User Connected'
+        } )
+        var form = $( 'form' ).on( 'submit', function( e ) {
+          e.preventDefault()
+          let user_name = $( 'input.username' ).val()
+          let user_input = $( 'input.message' ).val()
+
+          socket.emit( 'my_event_' + luminagic_socket_random, {
+            roomid: hardcode_roomid,
+            pageid: pageid,
+            role : user_role,
+            userid: myname,
+            message : user_input,
+            message_to_userid: user_name,
+          } )
+          $( 'input.message' ).val( '' ).focus()
+        } )
+      } )
+
+      socket.on( 'my_response_' + luminagic_socket_random, function( msg ) {
+        console.log( msg )
+        
+          if( typeof msg.role !== 'undefined' ) {
+            if( typeof msg.pageid !== 'undefined'  && msg.pageid == pageid) {
+
+              if(msg.role == 'doctor' ){
+                myname = 'doctor0'
+                
+              } else {
+                myname = 'patient' + msg.patient_count
+              }
+              $('#myname').text(myname)
+            }
+
+            $( 'h3' ).remove()
+            $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.role+'</b> pageid<' +
+                    msg.pageid + '> send = ' +
+                    msg.message_to_userid + ' => '+msg.message+'</div>' )
+
+          }
+
+     
+
+
+      })
+
+      $( "#patient" ).click(function() {
+        user_role = 'patient'
+        $('#show_eara').removeClass('hideDiv');
+        $( 'input.username').prop('disabled', true);
+        $( 'input.username' ).attr('placeholder', '我是戴设备的矫正用户');
+        $( 'input.message' ).val('device_ready');
+
+    });
+
+        $( "#doctor" ).click(function() {
+        user_role = 'doctor'
+        $('#show_eara').removeClass('hideDiv');
+        $( 'input.username' ).attr('placeholder','给哪个patientid发送');
+        $( 'input.message' ).val('next');
+
+    });
+
+    </script>
+
+  </body>
+  </html>
