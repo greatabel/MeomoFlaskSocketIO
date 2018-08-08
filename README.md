@@ -14,3 +14,6 @@ source /usr/local/bin/virtualenvwrapper.sh
 然后进行 创建的虚拟环境：
 pip3  install -r requirements.txt
 
+没有webserver时候，最简单：nohup flask run --host=172.17.84.175  --port=5000 &
+
+
