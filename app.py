@@ -12,9 +12,9 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 
 
-# @app.route('/')
-# def sessions():
-#     return render_template('session.html')
+@app.route('/test_session')
+def sessions():
+    return render_template('session.html')
 
 
 # def messageReceived(methods=['GET', 'POST']):
