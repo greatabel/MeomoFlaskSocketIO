@@ -16,9 +16,9 @@ socketio = SocketIO(app)
 # def sessions():
 #     return render_template('session.html')
 
-# @app.route('/test_index')
-# def index():
-#     return render_template('index.html')
+@app.route('/test_index')
+def index():
+    return render_template('index.html')
 
 # def messageReceived(methods=['GET', 'POST']):
 #     print('message was received!!!')
@@ -43,3 +43,4 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
 
 if __name__ == '__main__':
     socketio.run(app, host="172.17.84.175", debug=True)
+    # socketio.run(app, host="127.0.0.1", debug=True)
